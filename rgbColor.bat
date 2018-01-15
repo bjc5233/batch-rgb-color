@@ -1,4 +1,4 @@
-@echo off& call load.bat _getConsoleCurColor _getRandomNum _parseJSON& call loadF.bat _params _errorMsg _ifOr& call loadE.bat hex2dec& setlocal enabledelayedexpansion
+@echo off& call load.bat _getConsoleCurColor _getRandomNum _parseJSON& call loadF.bat _params _errorMsg _ifOr _dec2hex _hex2dec& setlocal enabledelayedexpansion
 ::说明
 ::  动态修改当前字体颜色槽为指定的RGB颜色
 ::参数
@@ -9,8 +9,6 @@
 ::  default - 字体颜色重置为原始颜色
 ::注意
 ::  由于default参数是flag型参数，因此必须放到参数列表最后
-::TODO
-::  hex2dec命令调用略慢，考虑采用pure batch书写
 ::external
 ::  date       2018-01-15  2:18:28
 ::  face       555~
@@ -47,6 +45,7 @@ if defined _param-2 (
     (%_call% ("0 255 bColor") %_getRandomNum%)
 )
 
+
 ::========================= processing =========================
 call :10to16 !rColor! rColorHex
 call :10to16 !gColor! gColorHex
@@ -57,11 +56,10 @@ goto :EOF
 
 
 
-
-
 ::========================= functions =========================
 :10to16
-for /f "tokens=2* delims= " %%i in ('%hex2dec% %1 -nobanner') do set colorHex=%%j& set colorHex=!colorHex:0x=!& if "!colorHex:~1,1!"=="" set colorHex=0!colorHex!
+call %_dec2hex% %1 colorHex
+if "!colorHex:~1,1!"=="" set colorHex=0!colorHex!
 set %2=!colorHex!
 goto :EOF
 
@@ -69,7 +67,8 @@ goto :EOF
 :getColorTableIndex
 (%_call% ("curColorStr") %_getConsoleCurColor%)
 set curColorStr=%curColorStr:0x=%& set curFontColor=!curColorStr:~-1!
-for /f "tokens=2* delims= " %%i in ('%hex2dec% 0x%curFontColor% -nobanner') do set colorTableIndex=%%j& if !colorTableIndex! LEQ 9 set colorTableIndex=0!colorTableIndex!
+call %_hex2dec% %curFontColor% colorTableIndex
+if !colorTableIndex! LEQ 9 set colorTableIndex=0!colorTableIndex!
 set %1=!colorTableIndex!
 goto :EOF
 
