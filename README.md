@@ -6,10 +6,39 @@
 
 ## 调用参数
 * [-m mode] R G B 
-* mode - 模式 [0-specifiedColor指定RGB] [1-randomColor随机颜色] [2-deskWallpaperColor桌面壁纸主色] [3-defaultColor重置默认颜色], 默认值为1
+* mode - 模式[0\color] [1\random] [2\desk] [3\default] 默认值为1
+* &emsp;&emsp;&emsp;&emsp;0\color - specifiedColor指定RGB
+* &emsp;&emsp;&emsp;&emsp;1\random - randomColor随机颜色
+* &emsp;&emsp;&emsp;&emsp;2\desk - deskWallpaperColor桌面壁纸主
+* &emsp;&emsp;&emsp;&emsp;3\default - defaultColor重置默认颜色
 * R - 红色代码[0-255], mode值为0时传递, 无则自动生成随机值
 * G - 绿色代码[0-255], mode值为0时传递, 无则自动生成随机值
 * B - 蓝色代码[0-255], mode值为0时传递, 无则自动生成随机值
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+::  [-m mode] R G B 
+::      mode - 模式[0\color] [1\random] [2\desk] [3\default]
+::             
+::             
+::             色
+::             
+::             
+::      R - 红色代码[0-255], mode值为0时传递, 无则自动生成随机值
+::      G - 绿色代码[0-255], mode值为0时传递, 无则自动生成随机值
+::      B - 蓝色代码[0-255], mode值为0时传递, 无则自动生成随机值
+
 
 
 ## 更新

@@ -3,7 +3,11 @@
 ::  动态修改当前字体颜色槽为指定的RGB颜色
 ::参数
 ::  [-m mode] R G B 
-::      mode - 模式 [0-specifiedColor指定RGB] [1-randomColor随机颜色] [2-deskWallpaperColor桌面壁纸主色] [3-defaultColor重置默认颜色], 默认值为1
+::      mode - 模式[0\color] [1\random] [2\desk] [3\default] 默认值为1
+::             0\color - specifiedColor指定RGB
+::             1\random - randomColor随机颜色
+::             2\desk - deskWallpaperColor桌面壁纸主色
+::             3\default - defaultColor重置默认颜色
 ::      R - 红色代码[0-255], mode值为0时传递, 无则自动生成随机值
 ::      G - 绿色代码[0-255], mode值为0时传递, 无则自动生成随机值
 ::      B - 蓝色代码[0-255], mode值为0时传递, 无则自动生成随机值
@@ -17,8 +21,9 @@
 call %_params% %*
 if defined _param-m (
     set mode=%_param-m%
-    (set or1=!mode! LSS 0& set or2=!mode! GTR 3& call %_ifOr% flag)
-    if defined flag (call %_errorMsg% %0 "mode MUST BETWEEN 0 AND 3")
+    (if /i !mode!==color set mode=0)& (if /i !mode!==random set mode=1)& (if /i !mode!==desk set mode=2)& (if /i !mode!==default set mode=3)
+    (set or1=!mode! LSS 0& set or2=!mode! GTR 3& call %_ifOr% flag 2)
+    if defined flag (call %_errorMsg% %0 "mode MUST IN [0\color] [1\random] [2\desk] [3\default]")
 ) else (
     set mode=1
 )
