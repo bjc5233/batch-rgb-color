@@ -1,14 +1,12 @@
-@echo off& call load.bat _getConsoleCurColor _getRandomNum _parseJSON& call loadF.bat _params _errorMsg _ifOr _dec2hex _hex2dec& setlocal enabledelayedexpansion
+@echo off& call load.bat _getDeskWallpaperPath _getConsoleCurColor _getRandomNum _parseJSON& call loadF.bat _params _errorMsg _ifOr _dec2hex _hex2dec _imageDominantColor& setlocal enabledelayedexpansion
 ::说明
 ::  动态修改当前字体颜色槽为指定的RGB颜色
 ::参数
-::  R G B [-d default]
-::  R - 红色代码[0-255], 无则自动生成随机值
-::  G - 绿色代码[0-255], 无则自动生成随机值
-::  B - 蓝色代码[0-255], 无则自动生成随机值
-::  default - 字体颜色重置为原始颜色
-::注意
-::  由于default参数是flag型参数，因此必须放到参数列表最后
+::  [-m mode] R G B 
+::      mode - 模式 [0-specifiedColor指定RGB] [1-randomColor随机颜色] [2-deskWallpaperColor桌面壁纸主色] [3-defaultColor重置默认颜色], 默认值为1
+::      R - 红色代码[0-255], mode值为0时传递, 无则自动生成随机值
+::      G - 绿色代码[0-255], mode值为0时传递, 无则自动生成随机值
+::      B - 蓝色代码[0-255], mode值为0时传递, 无则自动生成随机值
 ::external
 ::  date       2018-01-15  2:18:28
 ::  face       555~
@@ -17,33 +15,57 @@
 
 ::========================= set user param =========================
 call %_params% %*
-if defined _param-d (
+if defined _param-m (
+    set mode=%_param-m%
+    (set or1=!mode! LSS 0& set or2=!mode! GTR 3& call %_ifOr% flag)
+    if defined flag (call %_errorMsg% %0 "mode MUST BETWEEN 0 AND 3")
+) else (
+    set mode=1
+)
+
+
+
+::========================= calc rgb color =========================
+if !mode! EQU 0 (
+    if defined _param-0 (
+        set rColor=%_param-0%
+        (set or1=!rColor! LSS 0& set or2=!rColor! GTR 255& call %_ifOr% flag)
+        if defined flag (call %_errorMsg% %0 "rColor MUST BETWEEN 0 AND 255")
+    ) else (
+        (%_call% ("0 255 rColor") %_getRandomNum%)
+    )
+    if defined _param-1 (
+        set gColor=%_param-1%
+        (set or1=!gColor! LSS 0& set or2=!gColor! GTR 255& call %_ifOr% flag)
+        if defined flag (call %_errorMsg% %0 "gColor MUST BETWEEN 0 AND 255")
+    ) else (
+        (%_call% ("0 255 gColor") %_getRandomNum%)
+    )
+    if defined _param-2 (
+        set bColor=%_param-2%
+        (set or1=!bColor! LSS 0& set or2=!bColor! GTR 255& call %_ifOr% flag)
+        if defined flag (call %_errorMsg% %0 "bColor MUST BETWEEN 0 AND 255")
+    ) else (
+        (%_call% ("0 255 bColor") %_getRandomNum%)
+    )
+) 
+if !mode! EQU 1 (
+    (%_call% ("0 255 rColor") %_getRandomNum%)
+    (%_call% ("0 255 gColor") %_getRandomNum%)
+    (%_call% ("0 255 bColor") %_getRandomNum%)
+)
+if !mode! EQU 2 (
+    (%_call% ("deskWallpaperPath") %_getDeskWallpaperPath%)
+    (call %_imageDominantColor% "!deskWallpaperPath!" rColor gColor bColor)
+)
+if !mode! EQU 3 (
     call :getColorTableIndex colorTableIndex
     call :getDefaultColorTableValue !colorTableIndex! defaultColorTableValue
     call :setColorTable !colorTableIndex! !defaultColorTableValue!
     goto :EOF
 )
-if defined _param-0 (
-    set rColor=%_param-0%
-    (set or1=!rColor! LSS 0& set or2=!rColor! GTR 255& call %_ifOr% flag)
-    if defined flag (call %_errorMsg% %0 "rColor MUST BETWEEN 0 AND 255")
-) else (
-    (%_call% ("0 255 rColor") %_getRandomNum%)
-)
-if defined _param-1 (
-    set gColor=%_param-1%
-    (set or1=!gColor! LSS 0& set or2=!gColor! GTR 255& call %_ifOr% flag)
-    if defined flag (call %_errorMsg% %0 "gColor MUST BETWEEN 0 AND 255")
-) else (
-    (%_call% ("0 255 gColor") %_getRandomNum%)
-)
-if defined _param-2 (
-    set bColor=%_param-2%
-    (set or1=!bColor! LSS 0& set or2=!bColor! GTR 255& call %_ifOr% flag)
-    if defined flag (call %_errorMsg% %0 "bColor MUST BETWEEN 0 AND 255")
-) else (
-    (%_call% ("0 255 bColor") %_getRandomNum%)
-)
+
+
 
 
 ::========================= processing =========================
@@ -53,6 +75,7 @@ call :10to16 !bColor! bColorHex
 call :getColorTableIndex colorTableIndex
 call :setColorTable !colorTableIndex! !bColorHex!!gColorHex!!rColorHex!
 goto :EOF
+
 
 
 
