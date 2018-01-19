@@ -1,4 +1,4 @@
-@echo off& call load.bat _getDeskWallpaperPath _getConsoleCurColor _getRandomNum _parseJSON& call loadF.bat _params _errorMsg _ifOr _dec2hex _hex2dec _imageDominantColor& setlocal enabledelayedexpansion
+@echo off& call load.bat _getDeskWallpaperPath _getConsoleCurColor _getRandomNum _parseJSON& call loadF.bat _params _errorMsg _ifOr _dec2hex _hex2dec _imgDominantColor& setlocal enabledelayedexpansion
 ::说明
 ::  动态修改当前字体颜色槽为指定的RGB颜色
 ::参数
@@ -61,7 +61,7 @@ if !mode! EQU 1 (
 )
 if !mode! EQU 2 (
     (%_call% ("deskWallpaperPath") %_getDeskWallpaperPath%)
-    (call %_imageDominantColor% "!deskWallpaperPath!" rColor gColor bColor)
+    (call %_imgDominantColor% "!deskWallpaperPath!" rColor gColor bColor)
 )
 if !mode! EQU 3 (
     call :getColorTableIndex colorTableIndex
