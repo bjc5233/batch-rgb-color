@@ -1,24 +1,27 @@
-@echo off& call load.bat _getDeskWallpaperPath _getConsoleCurColor _getRandomNum _parseJSON& call loadF.bat _params _errorMsg _ifOr _dec2hex _hex2dec _imgDominantColor& setlocal enabledelayedexpansion
-::说明
-::  动态修改当前字体颜色槽为指定的RGB颜色
-::参数
-::  mode [R] [G] [B]
-::      mode - 模式[0\color] [1\random] [2\desk] [3\default] 默认值为1
-::             0\color - specifiedColor需要指定RGB值
-::             1\random - randomColor随机颜色
-::             2\desk - deskWallpaperColor桌面壁纸主色
-::             3\default - defaultColor重置默认颜色
-::      R - 红色代码[0-255], mode值为0时传递, 无则自动生成随机值
-::      G - 绿色代码[0-255], mode值为0时传递, 无则自动生成随机值
-::      B - 蓝色代码[0-255], mode值为0时传递, 无则自动生成随机值
-::external
-::  date       2018-01-15  2:18:28
-::  face       555~
-::  weather    多云转小雨 15℃/6℃ 风
-
+@echo off& call load.bat _getDeskWallpaperPath _getConsoleCurColor _getRandomNum _parseJSON& call loadF.bat _params _errorMsg _ifOr _dec2hex _hex2dec _imgDominantColor _help& setlocal enabledelayedexpansion
+:::说明
+:::  动态修改当前字体颜色槽为指定的RGB颜色
+:::参数
+:::  mode [R] [G] [B]
+:::      mode - 模式[0\color] [1\random] [2\desk] [3\default] 默认值为1
+:::             0\color - specifiedColor需要指定RGB值
+:::             1\random - randomColor随机颜色
+:::             2\desk - deskWallpaperColor桌面壁纸主色
+:::             3\default - defaultColor重置默认颜色
+:::      R - 红色代码[0-255], mode值为0时传递, 无则自动生成随机值
+:::      G - 绿色代码[0-255], mode值为0时传递, 无则自动生成随机值
+:::      B - 蓝色代码[0-255], mode值为0时传递, 无则自动生成随机值
+:::  [-h help]
+:::      help - 打印注释信息
+:::external
+:::  date       2018-01-15  2:18:28
+:::  face       555~
+:::  weather    多云转小雨 15℃/6℃ 风
 
 ::========================= set user param =========================
 call %_params% %*
+if defined _param-h (call %_help% "%~f0"& goto :EOF)
+if defined _param-help (call %_help% "%~f0"& goto :EOF)
 if defined _param-0 (
     set mode=%_param-0%
     (if /i !mode!==color set mode=0)& (if /i !mode!==random set mode=1)& (if /i !mode!==desk set mode=2)& (if /i !mode!==default set mode=3)
